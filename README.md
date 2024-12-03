@@ -292,7 +292,7 @@ _A Tsetlin Machine for Logical Learning and Reasoning With Graphs_. Ole-Christof
 
 ## CUDA Configurations
 
-### DGX-2 and A100
+### DGX-2 and A100 and V100
 
 ```bash
 tm = MultiClassGraphTsetlinMachine(
