@@ -44,11 +44,13 @@ graphs_train = Graphs(
     double_hashing = args.double_hashing
 )
 
+# Setup graphs by initializing them with random number of nodes
 for graph_id in range(args.number_of_examples):
     graphs_train.set_number_of_graph_nodes(graph_id, np.random.randint(args.number_of_classes, args.max_sequence_length+1))
 
 graphs_train.prepare_node_configuration()
 
+# Setting number of edges of each node :: 1 edge is node is on extreme ends (beginning or end), 2 edges if node is internal
 for graph_id in range(args.number_of_examples):
     for node_id in range(graphs_train.number_of_graph_nodes[graph_id]):
         number_of_edges = 2 if node_id > 0 and node_id < graphs_train.number_of_graph_nodes[graph_id]-1 else 1
@@ -70,9 +72,9 @@ for graph_id in range(args.number_of_examples):
             graphs_train.add_graph_node_edge(graph_id, node_id, destination_node_id, edge_type)
 
     Y_train[graph_id] = np.random.randint(args.number_of_classes)
-    node_id = np.random.randint(Y_train[graph_id], graphs_train.number_of_graph_nodes[graph_id])
+    node_id = np.random.randint(Y_train[graph_id], graphs_train.number_of_graph_nodes[graph_id]) #If output is True, there will be a series of A
     for node_pos in range(Y_train[graph_id] + 1):
-        graphs_train.add_graph_node_property(graph_id, node_id - node_pos, 'A')
+        graphs_train.add_graph_node_property(graph_id, node_id - node_pos, 'A')  #Set a symbol 'A' to True in some consequitive nodes
 
     if np.random.rand() <= args.noise:
         Y_train[graph_id] = np.random.choice(np.setdiff1d(np.arange(args.number_of_classes), [Y_train[graph_id]]))
@@ -161,6 +163,20 @@ for i in range(tm.number_of_clauses):
 
         print(" AND ".join(l))
 
+## Printing##
+#hypervectors
+print("Test Hypervectors:")
 print(graphs_test.hypervectors)
+print()
+print('TM Hypervectors:')
 print(tm.hypervectors)
+
+#Edge Types and ids
+print("Edge Disctionary:")
 print(graphs_test.edge_type_id)
+
+#Graphs 
+for i in [1, 12, 10, 15]:
+	print()
+    print(graphs_train.print_graph(i))
+    print('----')
